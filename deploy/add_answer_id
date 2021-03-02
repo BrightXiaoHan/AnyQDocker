@@ -1,0 +1,8 @@
+[
+    {
+        "indexed": false,
+        "stored": true,
+        "type": "string",
+        "name": "answer_id"
+    }
+]

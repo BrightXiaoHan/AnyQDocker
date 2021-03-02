@@ -1,0 +1,8 @@
+[
+    {
+        "indexed": true,
+        "stored": true,
+        "type": "string",
+        "name": "robot_id"
+    }
+]
