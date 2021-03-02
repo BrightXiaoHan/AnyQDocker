@@ -7,12 +7,12 @@
 
 构建镜像
 ```
-docker build -t faq:latest .
+docker build -t xiaoyu_faq:latest .
 ```
 
 运行容器在`10000`端口
 ```
-docker run --name xiaoyu_faq -p 10000:8080 -v xiaoyu_faq:/home/AnyQ/build/solr-4.10.3-anyq/example/solr/collection1 -d faq
+docker run --name xiaoyu_faq -p 10000:8080 -v xiaoyu_faq:/home/AnyQ/build/solr-4.10.3-anyq/example/solr/collection1 -d xiaoyu_faq
 ```
 `/home/AnyQ/build/solr-4.10.3-anyq/example/solr/collection1`为solr保存`collection`的路径，需要映射出去
 

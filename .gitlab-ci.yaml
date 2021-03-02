@@ -1,0 +1,47 @@
+stages:
+  - build
+  - test
+  - push
+
+variables:
+  IMAGE_NAME: xiaoyu_faq
+  CONTAINER_NAME: xiaoyu_faq_test
+
+build:
+  stage: build
+  script:
+    - docker build -t ${IMAGE_NAME}:latest .
+  only:
+    - master
+  tags:
+    - aliyun
+
+test:
+  stage: test
+  script:
+    - docker run --name ${CONTAINER_NAME} -v ${CONTAINER_NAME}:/home/AnyQ/build/solr-4.10.3-anyq/example/solr/collection1 -d ${IMAGE_NAME}
+    - sleep 20  # wait for program ready
+    - docker exec -it ${CONTAINER_NAME} "bash deploy/test_all.sh"
+    - docker stop ${CONTAINER_NAME} && docker rm -f ${CONTAINER_NAME}
+  only:
+    - master
+  tags:
+    - aliyun
+
+push:
+  stage: push
+  script:
+    - docker tag ${IMAGE_NAME} ${REGISTRY_URL}/${IMAGE_NAME}
+    - docker push ${REGISTRY_URL}/${IMAGE_NAME}
+
+clean:
+  stage: deploy
+  script:
+    - docker rm -f ${CONTAINER_NAME}
+    - docker rmi -f ${IMAGE_NAME}
+  only:
+    - master
+  tags:
+    - aliyun
+  when: manual
+

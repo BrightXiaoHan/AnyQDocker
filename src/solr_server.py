@@ -1,4 +1,5 @@
 import json
+import traceback
 
 import tornado
 from tornado.web import RequestHandler
@@ -11,10 +12,14 @@ class SolrToolsHandler(RequestHandler):
 
     def post(self):
         data = json.loads(self.request.body.decode("utf-8"))
-        code = self._handle_data(data)
-        result_data = {
-            "status_code": code
-        }
+        result_data = {}
+        try:
+            code = self._handle_data(data)
+            result_data["status_code"] = code
+        except Exception as e:
+            result_data["status_code"] = "500"
+            result_data["msg"] = str(e) + traceback.format_exc()
+
         self.write(json.dumps(result_data, ensure_ascii=False))
 
     def _handle_data(self, dic):

@@ -1,0 +1,14 @@
+[
+    {
+        "indexed": true, 
+        "stored": true, 
+        "type": "text_multi_lang", 
+        "name": "question"
+    }, 
+    {
+        "indexed": false, 
+        "stored": true, 
+        "type": "string", 
+        "name": "answer"
+    }
+]
