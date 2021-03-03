@@ -12,7 +12,7 @@ variables:
 clean:
   stage: clean
   script:
-    - docker ps -q --filter "name=${CONTAINER_NAME}" | grep -q . && docker rm -f ${CONTAINER_NAME}
+    - docker stop ${CONTAINER_NAME} || true && docker rm ${conTAINER_NAME} || true
   only:
     - master
   tags:
