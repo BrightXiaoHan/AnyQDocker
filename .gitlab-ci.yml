@@ -44,3 +44,7 @@ push:
   script:
     - docker tag ${IMAGE_NAME} ${REGISTRY_URL}/${IMAGE_NAME}
     - docker push ${REGISTRY_URL}/${IMAGE_NAME}
+  only:
+    - master
+  tags:
+    - aliyun
