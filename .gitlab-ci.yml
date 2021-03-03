@@ -35,7 +35,7 @@ push:
     - docker push ${REGISTRY_URL}/${IMAGE_NAME}
 
 clean:
-  stage: deploy
+  stage: build
   script:
     - docker rm -f ${CONTAINER_NAME}
     - docker rmi -f ${IMAGE_NAME}
