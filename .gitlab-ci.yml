@@ -1,4 +1,5 @@
 stages:
+  - clean
   - build
   - test
   - push
@@ -7,6 +8,15 @@ variables:
   IMAGE_NAME: xiaoyu_faq
   CONTAINER_NAME: xiaoyu_faq_test
   SRC_FOLDER: /home/faq
+
+clean:
+  stage: clean
+  script:
+    - docker ps -q --filter "name=${CONTAINER_NAME}" | grep -q . && docker rm -f ${CONTAINER_NAME}
+  only:
+    - master
+  tags:
+    - aliyun
 
 build:
   stage: build
@@ -21,7 +31,7 @@ test:
   stage: test
   script:
     - docker run --name ${CONTAINER_NAME} -v ${CONTAINER_NAME}:/home/AnyQ/build/solr-4.10.3-anyq/example/solr/collection1 -d ${IMAGE_NAME}
-    - sleep 20  # wait for program ready
+    - sleep 40  # wait for program ready
     - docker exec ${CONTAINER_NAME} bash -c "bash ${SRC_FOLDER}/deploy/test_all.sh"
     - docker stop ${CONTAINER_NAME} && docker rm -f ${CONTAINER_NAME}
   only:
@@ -34,15 +44,3 @@ push:
   script:
     - docker tag ${IMAGE_NAME} ${REGISTRY_URL}/${IMAGE_NAME}
     - docker push ${REGISTRY_URL}/${IMAGE_NAME}
-
-clean:
-  stage: build
-  script:
-    - docker rm -f ${CONTAINER_NAME}
-    - docker rmi -f ${IMAGE_NAME}
-  only:
-    - master
-  tags:
-    - aliyun
-  when: manual
-
