@@ -6,6 +6,7 @@ stages:
 variables:
   IMAGE_NAME: xiaoyu_faq
   CONTAINER_NAME: xiaoyu_faq_test
+  SRC_FOLDER: /home/faq
 
 build:
   stage: build
@@ -21,7 +22,7 @@ test:
   script:
     - docker run --name ${CONTAINER_NAME} -v ${CONTAINER_NAME}:/home/AnyQ/build/solr-4.10.3-anyq/example/solr/collection1 -d ${IMAGE_NAME}
     - sleep 20  # wait for program ready
-    - docker exec ${CONTAINER_NAME} "bash deploy/test_all.sh"
+    - docker exec ${CONTAINER_NAME} "bash ${SRC_FOLDER}/deploy/test_all.sh"
     - docker stop ${CONTAINER_NAME} && docker rm -f ${CONTAINER_NAME}
   only:
     - master
