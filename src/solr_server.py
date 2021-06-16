@@ -1,3 +1,4 @@
+from collections import defaultdict
 import json
 import traceback
 
@@ -80,6 +81,19 @@ class AddItemsHandler(SolrToolsHandler):
         return tools.upload_documents(documents=dic["documents"], robot_id=dic["robot_id"])
 
 
+# 双级字典，第一级，key:robot_id, value dict， 二级字典 key: question, value
+hot_question_cache = defaultdict(lambda: defaultdict(int))
+
+
+def get_hotest_questions(robot_code, top=5):
+    if len(hot_question_cache[robot_code]) == 0:
+        return []
+
+    questions = sorted(
+        hot_question_cache[robot_code], key=lambda x: hot_question_cache[robot_code][x])
+    return questions[:top]
+
+
 class AskHandler(RequestHandler):
     """数据示例{
         "robot_code": "test_robot_id",
@@ -95,9 +109,12 @@ class AskHandler(RequestHandler):
             "ask_code": data["question"],
             "answer_code": "99999",
             "answer_type": -1,
-            "confidence": 0
+            "confidence": 0,
+            "hotQuestions": get_hotest_questions(data["robot_code"]),
+            "recommendQuestions": []
         }
         if len(result) > 0:
+            hot_question_cache[data["robot_code"]][result[0]["question"]] += 1
             response_json["answer"] = result[0]["answer"]
             response_json["ask_code"] = result[0]["qa_id"]
             response_json["confidence"] = result[0]["confidence"]
@@ -105,6 +122,8 @@ class AskHandler(RequestHandler):
             response_json["answer_code"] = json_info.get(
                 "answer_id", response_json["ask_code"])
             response_json["answer_type"] = 0  # 正常答案
+        for item in result[1:]:
+            response_json["recommendQuestions"].append(item["question"])
         self.write(json.dumps(response_json, ensure_ascii=False))
 
 
