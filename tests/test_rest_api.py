@@ -47,6 +47,12 @@ def test_case_one():
                 "question": "今天天气怎么样",
                 "id": "test_question_id_2",
                 "answer_id": "answer_id"
+            },
+            {
+                "answer": "测试答案2",
+                "question": "今天天气怎么样",
+                "id": "test_question_id_3",
+                "answer_id": "answer_id"
             }
         ],
         "robot_id": ROBOT_CODE
@@ -60,10 +66,11 @@ def test_case_one():
         "question": "今天天气怎样"
     })
     assert response["answer"] == "测试答案2"
+    assert len(response["recommendQuestions"]) > 0
 
     # delete items
     response = post_get_data(DELETE_ITEMS, {
-        "q_ids": ["test_question_id_2"],
+        "q_ids": ["test_question_id_2", "test_question_id_3"],
         "robot_code": ROBOT_CODE
     })
     assert response["status_code"] == 0

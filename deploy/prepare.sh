@@ -18,6 +18,8 @@ python solr_script/solr_api.py set_schema localhost collection1 $CWD/add_answer_
 # update retrieval.conf
 rm -rf example/conf/retrieval.conf
 cp $CWD/retrieval.conf example/conf
+rm -rf example/conf/rank.conf
+cp $CWD/rank.conf example/conf
 
 # sleep 10 seconds for ready
 sleep 10
